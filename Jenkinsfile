@@ -27,10 +27,13 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                sh 'kubectl config use-context minikube'
-                sh 'kubectl apply -f k8s-deployment.yaml'
-            }
+    steps {
+        withEnv(["KUBECONFIG=$HOME/.kube/config"]) { // Ensure kubectl uses the correct config
+            sh 'kubectl config use-context minikube'
+            sh 'kubectl apply -f k8s-deployment.yaml'
         }
+    }
+}
+
     }
 }
