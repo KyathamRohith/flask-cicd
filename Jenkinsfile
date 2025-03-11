@@ -29,7 +29,6 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl config use-context minikube'
-                sh 'kubectl apply -f k8s-deployment.yaml' // Validate before applying
                 sh 'kubectl apply -f k8s-deployment.yaml'
             }
         }
