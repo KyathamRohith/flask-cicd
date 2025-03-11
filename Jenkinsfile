@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        KUBECONFIG = credentials('kubeconfig-credential-id') // Use Jenkins stored kubeconfig
+    }
+
     stages {
         stage('Clone Code') {
             steps {
@@ -24,6 +28,8 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
+                sh 'kubectl config use-context my-cluster-context'
+                sh 'kubectl apply --dry-run=client -f k8s-deployment.yaml' // Validate before applying
                 sh 'kubectl apply -f k8s-deployment.yaml'
             }
         }
