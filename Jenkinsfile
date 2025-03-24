@@ -1,10 +1,7 @@
 pipeline {
     agent any
 
-    environment {
-        KUBECONFIG = credentials('kubeconfig-credential-id') // Use Jenkins stored kubeconfig
-    }
-
+  
     stages {
         stage('Clone Code') {
             steps {
@@ -26,14 +23,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-    steps {
-        withEnv(["KUBECONFIG=$HOME/.kube/config"]) { // Ensure kubectl uses the correct config
-            sh 'kubectl config use-context minikube'
-            sh 'kubectl apply -f k8s-deployment.yaml'
-        }
-    }
-}
+       
 
     }
 }
