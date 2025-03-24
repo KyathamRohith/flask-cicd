@@ -36,7 +36,7 @@ pipeline {
                         sh 'kubectl config use-context minikube'
 
                         // Apply Kubernetes deployment
-                        sh 'sudo kubectl apply -f k8s-deployment.yaml'
+                        sh 'sudo -S kubectl apply -f k8s-deployment.yaml < /dev/null'
                     }
                 }
             }
