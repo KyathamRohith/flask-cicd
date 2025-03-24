@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         KUBECONFIG = credentials('myid') // Use Jenkins stored kubeconfig
+        SUDO_ASKPASS = "/etc/kube-askpass.sh" // Use askpass script
     }
 
     stages {
@@ -29,14 +30,14 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'myid', usernameVariable: 'KUBE_USER', passwordVariable: 'KUBE_PASS')]) {
-                    withEnv(["KUBECONFIG=$HOME/.kube/config"]) {
+                    withEnv(["KUBECONFIG=$HOME/.kube/config", "SUDO_ASKPASS=/etc/kube-askpass.sh"]) {
                         // Authenticate with Kubernetes
                         sh 'kubectl config set-credentials admin --username=$KUBE_USER --password=$KUBE_PASS'
                         sh 'kubectl config set-context minikube --user=admin'
                         sh 'kubectl config use-context minikube'
 
-                        // Apply Kubernetes deployment
-                        sh 'sudo -S kubectl apply -f k8s-deployment.yaml < /dev/null'
+                        // Use askpass to provide sudo password
+                        sh 'sudo -A kubectl apply -f k8s-deployment.yaml'
                     }
                 }
             }
