@@ -25,7 +25,7 @@ pipeline {
   stage('Deploy to Kubernetes') {
             steps {
                 withEnv(["KUBECONFIG=$HOME/.kube/config"]) { // Ensure kubectl uses the correct config
-                    sh 'kubectl config use-context minikube'  // Set Kubernetes context
+                     // Set Kubernetes context
                     sh 'kubectl apply -f k8s-deployment.yaml' // Deploy to Minikube
                 }
             }
