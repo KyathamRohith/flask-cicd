@@ -24,7 +24,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'myid', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'myid', usernameVariable: 'USER', passwordVariable: 'root')]) {
                     withEnv(["KUBECONFIG=$HOME/.kube/config"]) {
                         sh '''
                         echo $PASS | sudo -S kubectl apply -f k8s-deployment.yaml
