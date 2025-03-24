@@ -22,14 +22,15 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'myid')]) {
-                    withEnv(["KUBECONFIG=$HOME/.kube/config"]) {
-                        sh 'kubectl apply -f k8s-deployment.yaml'
-                    }
-                }
+       stage('Deploy to Kubernetes') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'myid', usernameVariable: 'KUBE_USER', passwordVariable: 'KUBE_PASS')]) {
+            withEnv(["KUBECONFIG=$HOME/.kube/config"]) {
+                sh 'kubectl apply -f k8s-deployment.yaml'
             }
         }
+    }
+}
+
     }
 }
