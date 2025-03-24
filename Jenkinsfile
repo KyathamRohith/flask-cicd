@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        KUBECONFIG = credentials('myid') // Use Jenkins stored kubeconfig
-        SUDO_ASKPASS = "/etc/kube-askpass.sh" // Use askpass script
-    }
 
     stages {
         stage('Clone Code') {
@@ -37,7 +33,7 @@ pipeline {
                         sh 'kubectl config use-context minikube'
 
                         // Use askpass to provide sudo password
-                        sh 'sudo -A kubectl apply -f k8s-deployment.yaml'
+                        sh 'sudo kubectl apply -f k8s-deployment.yaml'
                     }
                 }
             }
