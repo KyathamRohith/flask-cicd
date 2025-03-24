@@ -22,7 +22,7 @@ pipeline {
                 }
             }
         }
-  tage('Deploy to Kubernetes') {
+  stage('Deploy to Kubernetes') {
             steps {
                 withEnv(["KUBECONFIG=$HOME/.kube/config"]) { // Ensure kubectl uses the correct config
                     sh 'kubectl config use-context minikube'  // Set Kubernetes context
