@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     stages {
         stage('Clone Code') {
             steps {
@@ -25,10 +24,11 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'myid)]) {
-                    withEnv(["KUBECONFIG=$HOME/.kube/config"]{
-                        // Use askpass to provide sudo password
-                        sh 'sudo kubectl apply -f k8s-deployment.yaml'
+                withCredentials([usernamePassword(credentialsId: 'myid', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    withEnv(["KUBECONFIG=$HOME/.kube/config"]) {
+                        sh '''
+                        echo $PASS | sudo -S kubectl apply -f k8s-deployment.yaml
+                        '''
                     }
                 }
             }
