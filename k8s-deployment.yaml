@@ -13,34 +13,37 @@ spec:
         app: flask-app
     spec:
       imagePullSecrets:
-        - name: docker-hub-secret
+      - name: docker-hub-secret
       containers:
-        - name: flask-app
-          image: rohith1305/flask-cicd:latest
-          ports:
-            - containerPort: 5000
+      - name: flask-app
+        image: rohith1305/flask-cicd:latest
+        ports:
+        - containerPort: 5000
 
-          # Liveness Probe
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 5000
-            initialDelaySeconds: 10
-            periodSeconds: 5
+        # Resource requests required for HPA
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
 
-          # Readiness Probe
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 5000
-            initialDelaySeconds: 5
-            periodSeconds: 3
+        # Liveness Probe
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
 
-          resources:
-            requests:
-              cpu: "100m"
-            limits:
-              cpu: "500m"
+        # Readiness Probe
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 3
 
 ---
 apiVersion: v1
@@ -51,9 +54,9 @@ spec:
   selector:
     app: flask-app
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5000
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
   type: LoadBalancer
 
 ---
