@@ -28,7 +28,10 @@ pipeline {
        stage('Deploy to Kubernetes') {
     steps {
         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                sh 'kubectl set image deployment/flask-app flask-app=$DOCKER_IMAGE:$DOCKER_TAG'
+                sh '''
+                kubectl set image deployment/flask-app flask-app=$DOCKER_IMAGE:$DOCKER_TAG
+                kubectl apply -f flask-app.yaml
+                '''
         }
     }
 }
